@@ -1,0 +1,15 @@
+{
+  "name": "gh-corners",
+  "version": "1.0.2",
+  "description": "",
+  "main": "./dist/index.mjs",
+  "scripts": {
+    "build": "tsup --format esm,cjs"
+  },
+  "keywords": [],
+  "author": "hunghg255",
+  "license": "ISC",
+  "devDependencies": {
+    "tsup": "^6.7.0"
+  }
+}
