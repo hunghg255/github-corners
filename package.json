@@ -1,6 +1,6 @@
 {
   "name": "gh-corners",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "./dist/index.mjs",
   "scripts": {
@@ -11,5 +11,18 @@
   "license": "ISC",
   "devDependencies": {
     "tsup": "^6.7.0"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hunghg255/github-corners"
+  },
+  "bugs": {
+    "url": "https://github.com/hunghg255/github-corners/issues"
+  },
+  "homepage": "https://github.com/hunghg255/github-corners#readme"
 }
