@@ -1,6 +1,10 @@
 // src/index.ts
-var GITHUB_CORNERS_TEMPLATE = document.createElement("template");
-GITHUB_CORNERS_TEMPLATE.innerHTML = `
+var isBrowser = !!(typeof window !== "undefined" && window.document && window.document.createElement);
+(() => {
+  try {
+    if (isBrowser) {
+      const GITHUB_CORNERS_TEMPLATE = document.createElement("template");
+      GITHUB_CORNERS_TEMPLATE.innerHTML = `
 <style>
 :host a:hover .octo-arm { animation: octocat-wave 560ms ease-in-out; }
 @keyframes octocat-wave {
@@ -29,43 +33,62 @@ GITHUB_CORNERS_TEMPLATE.innerHTML = `
   </a>
 </svg>
 `;
-var GithubCorners = class extends HTMLElement {
-  constructor() {
-    super();
-    this.right = "0";
-    this.shadow = this.attachShadow({ mode: "open" });
-    this.shadow.appendChild(this.ownerDocument.importNode(GITHUB_CORNERS_TEMPLATE.content, true));
-    this.update();
-  }
-  static get observedAttributes() {
-    return ["style", "z-index", "target", "height", "width", "href", "color", "fill", "position", "top", "left", "right", "bottom", "transform"];
-  }
-  setAttr(name, value) {
-    const svg = this.shadow.querySelector("svg");
-    if (/(href)/.test(name.toLocaleLowerCase())) {
-      svg.lastElementChild.setAttribute("xlink:href", value);
-    } else if (/(color|fill)/.test(name.toLocaleLowerCase())) {
-      svg.firstElementChild.style[name] = value;
-    } else if (/(z-index|position|top|left|right|bottom|transform)/.test(name.toLocaleLowerCase())) {
-      svg.style[name] = value;
-    } else {
-      svg.setAttribute(name, value);
+      class GithubCorners extends HTMLElement {
+        constructor() {
+          super();
+          this.right = "0";
+          this.shadow = this.attachShadow({ mode: "open" });
+          this.shadow.appendChild(
+            this.ownerDocument.importNode(GITHUB_CORNERS_TEMPLATE.content, true)
+          );
+          this.update();
+        }
+        static get observedAttributes() {
+          return [
+            "style",
+            "z-index",
+            "target",
+            "height",
+            "width",
+            "href",
+            "color",
+            "fill",
+            "position",
+            "top",
+            "left",
+            "right",
+            "bottom",
+            "transform"
+          ];
+        }
+        setAttr(name, value) {
+          const svg = this.shadow.querySelector("svg");
+          if (/(href)/.test(name.toLocaleLowerCase())) {
+            svg.lastElementChild.setAttribute("xlink:href", value);
+          } else if (/(color|fill)/.test(name.toLocaleLowerCase())) {
+            svg.firstElementChild.style[name] = value;
+          } else if (/(z-index|position|top|left|right|bottom|transform)/.test(
+            name.toLocaleLowerCase()
+          )) {
+            svg.style[name] = value;
+          } else {
+            svg.setAttribute(name, value);
+          }
+        }
+        update() {
+          [...this.getAttributeNames(), "right"].forEach((name) => {
+            const value = this.getAttribute(name) || this[name] || "";
+            this.setAttr(name, value);
+          });
+        }
+        attributeChangedCallback(name, oldValue, newValue) {
+          if (oldValue !== newValue) {
+            this.setAttr(name, newValue);
+          }
+        }
+      }
+      customElements.define("github-corners", GithubCorners);
     }
+  } catch (error) {
   }
-  update() {
-    ;
-    [...this.getAttributeNames(), "right"].forEach((name) => {
-      const value = this.getAttribute(name) || this[name] || "";
-      this.setAttr(name, value);
-    });
-  }
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue !== newValue) {
-      this.setAttr(name, newValue);
-    }
-  }
-};
-customElements.define("github-corners", GithubCorners);
-export {
-  GithubCorners
-};
+})();

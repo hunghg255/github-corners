@@ -1,12 +1,22 @@
+//@ts-expect-error
 declare global {
   interface HTMLElementTagNameMap {
     'github-corners': GithubCorners;
   }
 }
 
-const GITHUB_CORNERS_TEMPLATE = document.createElement("template");
+const isBrowser = !!(
+  typeof window !== 'undefined' &&
+  window.document &&
+  window.document.createElement
+);
 
-GITHUB_CORNERS_TEMPLATE.innerHTML = `
+(() => {
+  try {
+    if (isBrowser) {
+      const GITHUB_CORNERS_TEMPLATE = document.createElement('template');
+
+      GITHUB_CORNERS_TEMPLATE.innerHTML = `
 <style>
 :host a:hover .octo-arm { animation: octocat-wave 560ms ease-in-out; }
 @keyframes octocat-wave {
@@ -36,54 +46,86 @@ GITHUB_CORNERS_TEMPLATE.innerHTML = `
 </svg>
 `;
 
-export class GithubCorners extends HTMLElement {
-  /** Sets the z-order of a positioned element and its descendants or flex items. */
-  'z-index'?: string;
-  height?: string | number;
-  width?: string | number;
-  href?: string;
-  color?: string;
-  fill?: string;
-  position?: string;
-  target?: string;
-  top?: string;
-  left?: string;
-  right?: string = '0';
-  bottom?: string;
-  transform?: string;
-  private shadow: ShadowRoot
-  static get observedAttributes(): string[] {
-    return ['style', 'z-index', 'target', 'height', 'width', 'href', 'color', 'fill', 'position', 'top', 'left', 'right', 'bottom', 'transform'];
-  }
-  constructor() {
-    super();
-    this.shadow = this.attachShadow({ mode: 'open' });
-    this.shadow.appendChild(this.ownerDocument.importNode(GITHUB_CORNERS_TEMPLATE.content, true));
-    this.update()
-  }
-  private setAttr(name: string, value: string) {
-    const svg: any = this.shadow.querySelector('svg');
-    if (/(href)/.test(name.toLocaleLowerCase())) {
-      svg.lastElementChild.setAttribute('xlink:href', value);
-    } else if (/(color|fill)/.test(name.toLocaleLowerCase())) {
-      (svg.firstElementChild as HTMLAnchorElement).style[name as any] = value;
-    } else if (/(z-index|position|top|left|right|bottom|transform)/.test(name.toLocaleLowerCase())) {
-      svg.style[name as any] = value;
-    } else {
-      svg.setAttribute(name, value);
-    }
-  }
-  private update() {
-    ;[...this.getAttributeNames(), 'right'].forEach((name) => {
-      const value = this.getAttribute(name) || this[name as keyof GithubCorners] as any || '';
-      this.setAttr(name, value);
-    });
-  }
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (oldValue !== newValue) {
-      this.setAttr(name, newValue);
-    }
-  }
-}
+      class GithubCorners extends HTMLElement {
+        /** Sets the z-order of a positioned element and its descendants or flex items. */
+        'z-index'?: string;
+        height?: string | number;
+        width?: string | number;
+        href?: string;
+        color?: string;
+        fill?: string;
+        position?: string;
+        target?: string;
+        top?: string;
+        left?: string;
+        right?: string = '0';
+        bottom?: string;
+        transform?: string;
+        private shadow: ShadowRoot;
+        static get observedAttributes(): string[] {
+          return [
+            'style',
+            'z-index',
+            'target',
+            'height',
+            'width',
+            'href',
+            'color',
+            'fill',
+            'position',
+            'top',
+            'left',
+            'right',
+            'bottom',
+            'transform',
+          ];
+        }
+        constructor() {
+          super();
+          this.shadow = this.attachShadow({ mode: 'open' });
+          this.shadow.appendChild(
+            this.ownerDocument.importNode(GITHUB_CORNERS_TEMPLATE.content, true)
+          );
+          this.update();
+        }
+        private setAttr(name: string, value: string) {
+          const svg: any = this.shadow.querySelector('svg');
+          if (/(href)/.test(name.toLocaleLowerCase())) {
+            svg.lastElementChild.setAttribute('xlink:href', value);
+          } else if (/(color|fill)/.test(name.toLocaleLowerCase())) {
+            (svg.firstElementChild as HTMLAnchorElement).style[name as any] =
+              value;
+          } else if (
+            /(z-index|position|top|left|right|bottom|transform)/.test(
+              name.toLocaleLowerCase()
+            )
+          ) {
+            svg.style[name as any] = value;
+          } else {
+            svg.setAttribute(name, value);
+          }
+        }
+        private update() {
+          [...this.getAttributeNames(), 'right'].forEach((name) => {
+            const value =
+              this.getAttribute(name) ||
+              (this[name as keyof GithubCorners] as any) ||
+              '';
+            this.setAttr(name, value);
+          });
+        }
+        attributeChangedCallback(
+          name: string,
+          oldValue: string,
+          newValue: string
+        ) {
+          if (oldValue !== newValue) {
+            this.setAttr(name, newValue);
+          }
+        }
+      }
 
-customElements.define('github-corners', GithubCorners);
+      customElements.define('github-corners', GithubCorners);
+    }
+  } catch (error) {}
+})();
