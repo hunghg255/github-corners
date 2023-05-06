@@ -1,10 +1,4 @@
-// src/index.ts
-var isBrowser = !!(typeof window !== "undefined" && window.document && window.document.createElement);
-(() => {
-  try {
-    if (isBrowser) {
-      const GITHUB_CORNERS_TEMPLATE = document.createElement("template");
-      GITHUB_CORNERS_TEMPLATE.innerHTML = `
+var i=!!(typeof window<"u"&&window.document&&window.document.createElement);(()=>{try{if(i){let r=document.createElement("template");r.innerHTML=`
 <style>
 :host a:hover .octo-arm { animation: octocat-wave 560ms ease-in-out; }
 @keyframes octocat-wave {
@@ -32,63 +26,5 @@ var isBrowser = !!(typeof window !== "undefined" && window.document && window.do
     </g>
   </a>
 </svg>
-`;
-      class GithubCorners extends HTMLElement {
-        constructor() {
-          super();
-          this.right = "0";
-          this.shadow = this.attachShadow({ mode: "open" });
-          this.shadow.appendChild(
-            this.ownerDocument.importNode(GITHUB_CORNERS_TEMPLATE.content, true)
-          );
-          this.update();
-        }
-        static get observedAttributes() {
-          return [
-            "style",
-            "z-index",
-            "target",
-            "height",
-            "width",
-            "href",
-            "color",
-            "fill",
-            "position",
-            "top",
-            "left",
-            "right",
-            "bottom",
-            "transform"
-          ];
-        }
-        setAttr(name, value) {
-          const svg = this.shadow.querySelector("svg");
-          if (/(href)/.test(name.toLocaleLowerCase())) {
-            svg.lastElementChild.setAttribute("xlink:href", value);
-          } else if (/(color|fill)/.test(name.toLocaleLowerCase())) {
-            svg.firstElementChild.style[name] = value;
-          } else if (/(z-index|position|top|left|right|bottom|transform)/.test(
-            name.toLocaleLowerCase()
-          )) {
-            svg.style[name] = value;
-          } else {
-            svg.setAttribute(name, value);
-          }
-        }
-        update() {
-          [...this.getAttributeNames(), "right"].forEach((name) => {
-            const value = this.getAttribute(name) || this[name] || "";
-            this.setAttr(name, value);
-          });
-        }
-        attributeChangedCallback(name, oldValue, newValue) {
-          if (oldValue !== newValue) {
-            this.setAttr(name, newValue);
-          }
-        }
-      }
-      customElements.define("github-corners", GithubCorners);
-    }
-  } catch (error) {
-  }
-})();
+`;class s extends HTMLElement{constructor(){super();this.right="0";this.shadow=this.attachShadow({mode:"open"}),this.shadow.appendChild(this.ownerDocument.importNode(r.content,!0)),this.update()}static get observedAttributes(){return["style","z-index","target","height","width","href","color","fill","position","top","left","right","bottom","transform"]}setAttr(t,e){let o=this.shadow.querySelector("svg");/(href)/.test(t.toLocaleLowerCase())?o.lastElementChild.setAttribute("xlink:href",e):/(color|fill)/.test(t.toLocaleLowerCase())?o.firstElementChild.style[t]=e:/(z-index|position|top|left|right|bottom|transform)/.test(t.toLocaleLowerCase())?o.style[t]=e:o.setAttribute(t,e)}update(){[...this.getAttributeNames(),"right"].forEach(t=>{let e=this.getAttribute(t)||this[t]||"";this.setAttr(t,e)})}attributeChangedCallback(t,e,o){e!==o&&this.setAttr(t,o)}}customElements.define("github-corners",s)}}catch{}})();
+//# sourceMappingURL=index.js.map

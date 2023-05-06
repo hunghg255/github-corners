@@ -1,6 +1,6 @@
 {
   "name": "gh-corners",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "./dist/index.mjs",
   "scripts": {
@@ -12,6 +12,7 @@
   "devDependencies": {
     "tsup": "^6.7.0"
   },
+  "files": ["dist"],
   "browserslist": [
     ">0.2%",
     "not dead",
